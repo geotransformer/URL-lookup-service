@@ -1,6 +1,6 @@
 #! /bin/bash
 docker rm -f $(docker ps -a -f name=url-lookup -q) || true
-echo "building" 
+echo "Building" 
 docker build -t url-lookup .
 
 echo "Run"
@@ -9,7 +9,7 @@ docker run -d --name url-lookup --rm -v $(pwd)/config:/opt/run/url-lookup-servic
 
 sleep 5
 
-echo "testing"
+echo "Testing"
 curl localhost:5003/healthy
 curl localhost:5003/urlinfo/1/test2:8080/good?malware=true
 curl "localhost:5003/urlinfo/1/test2:8080/good?malware=true&safe=false"

@@ -1,7 +1,6 @@
 import logging
-from flask import Flask
-from flask import jsonify
-from flask import request
+from flask import Flask, jsonify, request
+
 app = Flask(__name__)
 malwareDB = {}
 
@@ -40,5 +39,5 @@ class URLLookupService(object):
         log.info(str(malwareDB))
 
     def start(self):
-        app.run(host='0.0.0.0', port=5003, debug=False, use_reloader=False)
+        app.run(host='0.0.0.0', port=8888, debug=True, use_reloader=False)
 

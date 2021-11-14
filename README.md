@@ -24,9 +24,9 @@ curl localhost:8888/urlinfo/1/test2:8080/good?malware=true
 - Internet access
 
 **2 Install**
-- Checkout or download this git repository to local development environment.
+- Checkout or download this git repository to the local development environment.
 
-- In the URL-lookup-service directory, run install.sh to deploy the web service into container.
+- In the URL-lookup-service directory, run install.sh to deploy the web service into a container.
 
   ```bash
   cloud-user@fasheng:~/URL-lookup-service$ ./install.sh 
@@ -69,32 +69,33 @@ install.sh
 Describe how you would accomplish the following:
 
 1 The size of the URL list could grow infinitely. How might you scale this beyond the memory capacity of the system? 
-- Scale up, moving to a more powerful machine with more memory and disk
-- Scale out. Split the database into multiple partition. Deploy multiple web service instances and to provide the service for different partitions. Add reverse proxy server to web services instances to cache the response and route the request to proper web service instance in need.
+- Scale up. Move to a more powerful machine with more memory and disk
+- Scale out. Split the database into multiple partitions. Deploy multiple web service instances and to provide the service for different partitions. Add reverse proxy server to web services instances to cache the response and route the request to the mateched web service instance in need.
 
 2 Assume that the number of requests will exceed the capacity of a single system, describe how might you solve this, and how might this change if you have to distribute this workload to an additional region, such as Europe. 
 - scale up
-- Scale out. Save the malware urls into a database management system. The web service connects to the database management system to check the URL. Deploy the stateless web service instances so that the instances numbers can be scaled in/out dynamically, based on the the number of requests. Add a load balancer to distribute the request accordingly to the web service instances.
-- Deploy the web service and the database into multiple datacenters, e.g., datacenter in North America, Europe, etc. Configure the database to replicate data across datacenters. Add a DNS-based traffic load balancer to distribute incoming requests from a Europe to the web service instances in Europe.
+- Scale out. Save the malware urls into a database management system. The web service connects to the database management system to check the URL. Deploy the stateless web service instances so that the instances numbers can be scaled in/out dynamically, based on the number of requests. Add a load balancer to distribute the request accordingly to the web service instances.
+- Deploy the web service and the database into multiple datacenters, e.g., datacenter in North America, Europe, etc. Configure the database to replicate data across datacenters. Add a DNS-based traffic load balancer to distribute incoming requests from Europe to the web service instances in Europe.
 
 3 What are some strategies you might use to update the service with new URLs? Updates may be as much as 5 thousand URLs a day with updates arriving every 10 minutes.
-- Persist the update before update the runtime 
+- Persist the update before updating the runtime 
+- Add a message queue for the update request
 - Database replication, only leader replica can write, the follower replica is read-only
 
 4 [On-Call] You’re woken up at 3am, what are some of the things you’ll look for? Does that change anything you’ve done in the app?
 - Recent change history
-- Sysptoms of the issue. Check the knowledge base for it. misconfiguration, human error, hardware issue
+- Symptoms of the issue. Check the knowledge base for it. misconfiguration, human error, hardware issue
 - Logs for the system to investigate what is the root cause
-- A good system design and implementation can help to form a hypotheses about what's gone wrong. 
+- A good system design and implementation can help to form a hypothesis about what's gone wrong. 
 
 5 What are some considerations for the lifecycle of the app?
-- Design with operability, scalibility, reliability and evolvability
-- Ensure security within lifecycle of the app
+- Design with operability, scalability, reliability, and evolvability
+- Ensure security within the lifecycle of the app
 - Test-driven development, automated testing, and CI/CD 
 - Responsive support 
 
 6 You need to deploy a new version of this application. What would you do?
 - Rolling deployment. No downtime for the service
-- Canary deployments. New deployment might fail, but won't impact whole system
-- Blue-green deployment. Easy to rollback to the previous deployment 
+- Canary deployments. New deployment might fail, but won't impact the whole system
+- Blue-green deployment. Easy to roll back to the previous deployment
 

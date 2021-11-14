@@ -1,19 +1,14 @@
 import logging
+from log import init_logging
 from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 malwareDB = {}
-
 log = logging.getLogger('URLLookupService')
 
 class URLLookupService(object):
     def __init__(self):
-        log.setLevel(logging.DEBUG)
-        stdoutHandler = logging.StreamHandler()
-        stdoutHandler.setLevel(logging.INFO)
-        formatter = logging.Formatter("%(asctime)s [%(levelname)s] [%(filename)s:%(lineno)d] %(message)s")
-        stdoutHandler.setFormatter(formatter)
-        log.addHandler(stdoutHandler)
+        init_logging(log)
 
     @app.route("/")
     @app.route('/healthy', methods=['GET'])
@@ -31,12 +26,19 @@ class URLLookupService(object):
             safe = False 
         return jsonify({"safe": safe, "url": url})
 
+    # Load malware urls from local file
     def loadMalwareDB(self, local_malware_DB):
-        with open(local_malware_DB) as f:
-            for line in f:
-                url = str(line).strip()
-                malwareDB[url] = url
-        log.info(str(malwareDB))
+        log.info("Initialize malware url DB from local file")
+        try:
+            with open(local_malware_DB) as f:
+                for line in f:
+                    url = str(line).strip()
+                    malwareDB[url] = url
+            log.info(str(malwareDB))
+        except Exception as ex:
+            log.error("Error to load malware file: {0}".format(local_malware_DB))
+            raise ex
+
 
     def start(self):
         app.run(host='0.0.0.0', port=8888, debug=True, use_reloader=False)
